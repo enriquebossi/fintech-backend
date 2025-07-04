@@ -3,6 +3,7 @@ const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const cors = require('cors');
+const { addTransaction, getTransactions } = require('./data/transactions');
 
 const app = express();
 app.use(express.json());
@@ -47,7 +48,30 @@ app.post('/api/query-supabase', async (req, res) => {
     }
 });
 
+// Store a transaction in memory
+app.post('/api/transactions', (req, res) => {
+    const txn = req.body;
+    if (!txn || typeof txn.Value !== 'number' || !txn.Currency) {
+        return res.status(400).json({ error: 'Invalid transaction data.' });
+    }
+    addTransaction(txn);
+    res.status(201).json({ status: 'saved' });
+});
+
+// Return aggregated analytics of transactions
+app.get('/api/transaction-analytics', (req, res) => {
+    const totals = {};
+    const txns = getTransactions();
+    for (const t of txns) {
+        if (typeof t.Value !== 'number' || !t.Currency) continue;
+        totals[t.Currency] = (totals[t.Currency] || 0) + t.Value;
+    }
+    res.json({ count: txns.length, totals });
+});
+
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+if (require.main === module) {
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
 
 module.exports = app;
