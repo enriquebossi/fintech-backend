@@ -1,0 +1,11 @@
+// ...después de const answer = …
+if (process.env.SLACK_WEBHOOK_URL) {
+  await fetch(process.env.SLACK_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      channel: '#lean2-dev',               // fuerza canal destino
+      text: `🤖 Cosmo responde: ${answer}`
+    })
+  });
+}
