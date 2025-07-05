@@ -1,11 +1,331 @@
-// ...después de const answer = …
-if (process.env.SLACK_WEBHOOK_URL) {
-  await fetch(process.env.SLACK_WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      channel: '#lean2-dev',               // fuerza canal destino
-      text: `🤖 Cosmo responde: ${answer}`
-    })
-  });
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plan Estratégico de Contradefensa: DIVERSICA vs. Atrium</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #1a202c; color: #e2e8f0; }
+    .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 300px; max-height: 400px; }
+    .brand-accent { color: #f56565; }
+    .bg-accent { background-color: #f56565; }
+    .border-accent { border-color: #f56565; }
+    .card { background-color: #2d3748; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); border: 1px solid #4a5568; height: 100%; display: flex; flex-direction: column; }
+    .flowchart-node { background-color: #4a5568; border: 2px solid #718096; padding: 1rem; border-radius: 0.5rem; text-align: center; flex-grow: 1; }
+    .flowchart-arrow { font-size: 2.5rem; color: #f56565; line-height: 1; align-self: center; }
+    .timeline-item::before { content: ''; position: absolute; left: -11px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; border-radius: 50%; background-color: #f56565; border: 4px solid #1a202c; }
+    .red-line-card { border-left: 5px solid #e53e3e; background: linear-gradient(to right, rgba(229,62,62,0.1), transparent); }
+  </style>
+</head>
+<body class="antialiased">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function App() {
+      React.useEffect(() => {
+        const tooltipTitleCallback = {
+          plugins: {
+            tooltip: {
+              callbacks: {
+                title: function(tooltipItems) {
+                  const item = tooltipItems[0];
+                  let label = item.chart.data.labels[item.dataIndex];
+                  if (Array.isArray(label)) {
+                    return label.join(' ');
+                  } else {
+                    return label;
+                  }
+                }
+              }
+            }
+          }
+        };
+
+        const wrapLabel = (label) => {
+          const maxLen = 16;
+          if (label.length <= maxLen) return label;
+          const words = label.split(' ');
+          let lines = [];
+          let currentLine = '';
+          for (const word of words) {
+            if ((currentLine + ' ' + word).trim().length > maxLen && currentLine.length > 0) {
+              lines.push(currentLine);
+              currentLine = word;
+            } else {
+              currentLine = (currentLine + ' ' + word).trim();
+            }
+          }
+          if (currentLine.length > 0) lines.push(currentLine);
+          return lines;
+        };
+
+        const originalLabelsMora = ['Tasa de Mora Contractual', 'Tasa de Mercado Estándar'];
+        const ctxMora = document.getElementById('moraChart').getContext('2d');
+        new Chart(ctxMora, {
+          type: 'bar',
+          data: {
+            labels: originalLabelsMora.map(wrapLabel),
+            datasets: [{
+              label: 'Tasa de Interés Mensual Equivalente (%)',
+              data: [60, 2.5],
+              backgroundColor: ['#e53e3e', '#718096'],
+              borderColor: ['#e53e3e', '#718096'],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            ...tooltipTitleCallback,
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            scales: {
+              x: {
+                beginAtZero: true,
+                ticks: { color: '#a0aec0' },
+                grid: { color: '#4a5568' }
+              },
+              y: {
+                ticks: { color: '#e2e8f0' },
+                grid: { display: false }
+              }
+            },
+            plugins: {
+              ...tooltipTitleCallback.plugins,
+              legend: { display: false },
+              title: {
+                display: true,
+                text: 'Comparativa de Penalidad por Mora',
+                color: '#FFFFFF',
+                padding: { bottom: 10 }
+              }
+            }
+          }
+        });
+
+        const originalLabelsRiesgo = ['Alta Recompensa', 'Alto Riesgo'];
+        const ctxRiesgo = document.getElementById('riesgoChart').getContext('2d');
+        new Chart(ctxRiesgo, {
+          type: 'doughnut',
+          data: {
+            labels: originalLabelsRiesgo.map(wrapLabel),
+            datasets: [{
+              data: [60, 40],
+              backgroundColor: ['rgba(56, 161, 105, 0.8)', 'rgba(229, 62, 62, 0.8)'],
+              borderColor: ['#38a169', '#e53e3e'],
+              borderWidth: 2,
+              hoverOffset: 8
+            }]
+          },
+          options: {
+            ...tooltipTitleCallback,
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              ...tooltipTitleCallback.plugins,
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#e2e8f0',
+                  font: { size: 14 },
+                  padding: 20
+                }
+              },
+              title: {
+                display: true,
+                text: 'Balance Riesgo/Recompensa',
+                color: '#FFFFFF',
+                padding: { bottom: 10 }
+              }
+            }
+          }
+        });
+      }, []);
+
+      return (
+        <div className="container mx-auto p-4 md:p-8">
+          <nav className="flex justify-between items-center mb-6">
+            <div className="text-xl font-bold text-white">Lovable</div>
+            <div className="space-x-4">
+              <button className="bg-accent text-white px-4 py-2 rounded">Consult Your Case for Free</button>
+              <button className="bg-accent text-white px-4 py-2 rounded">Get a Recommendation Quote</button>
+            </div>
+          </nav>
+
+          <header className="text-center mb-16">
+            <h1 className="text-4xl md:text-6xl font-black uppercase">Guerra Asimétrica: <span className="brand-accent">Plan de Contradefensa</span></h1>
+            <p className="text-lg md:text-xl text-gray-400 mt-2">Protocolo Estratégico para DIVERSICA, S.A. vs. Edificio Atrium</p>
+          </header>
+
+          <main>
+            <section id="analisis" className="mb-20">
+              <h2 className="text-3xl font-bold text-center mb-2">La Matriz de Amenaza</h2>
+              <p className="text-center text-gray-400 mb-12 max-w-3xl mx-auto">El contrato propuesto no es un acuerdo, es un arsenal. A continuación, se deconstruyen las armas contractuales diseñadas por el adversario para fabricar incumplimientos.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="card">
+                  <h3 className="text-xl font-bold mb-2">Arma 1: <span className="brand-accent">Mora Exponencial</span></h3>
+                  <p className="text-gray-400 mb-4 flex-grow">La penalidad del 2% diario por mora (60% mensual) es una trampa financiera diseñada para fabricar un incumplimiento masivo a partir de un retraso mínimo y justificar un desahucio sumario.</p>
+                  <div className="chart-container h-56">
+                    <canvas id="moraChart"></canvas>
+                  </div>
+                </div>
+                <div className="card">
+                  <h3 className="text-xl font-bold mb-2">Arma 2: <span className="brand-accent">Cláusula de "Asiento Eyectable"</span></h3>
+                  <p className="text-gray-400 mb-4 flex-grow">La Causal 10ª permite la terminación unilateral y arbitraria del contrato por parte del arrendador, sin necesidad de justificación real. Es un arma de terminación a voluntad que invalida cualquier inversión.</p>
+                  <div className="flex items-center justify-center h-full">
+                    <div className="text-8xl">💣</div>
+                  </div>
+                </div>
+                <div className="card">
+                  <h3 className="text-xl font-bold mb-2">Arma 3: <span className="brand-accent">Normas como Arma</span></h3>
+                  <p className="text-gray-400 mb-4 flex-grow">El contrato permite la rescisión por cualquier violación a las "normas de convivencia", que son subjetivas (ruido, aglomeraciones), facilitando la fabricación de pretextos a través de quejas dirigidas.</p>
+                  <div className="text-center flex-grow flex flex-col justify-center">
+                    <p className="text-5xl mb-2">📜</p>
+                    <p className="text-gray-400">Queja Fabricada → Incumplimiento</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="protocolo" className="mb-20">
+              <h2 className="text-3xl font-bold text-center mb-2">El Protocolo "Sun Tzu"</h2>
+              <p className="text-center text-gray-400 mb-12 max-w-3xl mx-auto">Un plan de acción en tres fases para ganar la batalla antes de que comience, logrando la paz a través de la fuerza y la preparación.</p>
+              <div className="card p-8 mb-8">
+                <h3 className="text-3xl font-bold mb-4 text-center">El Escudo: <span className="brand-accent">La Aseguradora como Aliado Litigante</span></h3>
+                <p className="text-center text-gray-300 mb-6 max-w-4xl mx-auto">La "obligación de defensa" de la póliza de RC General es el gran ecualizador. Al activar la cobertura, DIVERSICA sustituye sus recursos legales por los de una corporación litigante sofisticada, inmune a redes de influencia locales, nivelando así el campo de juego.</p>
+                <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                  <div className="flowchart-node">Demanda del<br />Adversario</div>
+                  <div className="flowchart-arrow">→</div>
+                  <div className="flowchart-node bg-accent text-white border-accent">Póliza de RC<br />Activada</div>
+                  <div className="flowchart-arrow">→</div>
+                  <div className="flowchart-node text-green-300 border-green-500">Defensa Legal de Élite<br />Financiada por la Aseguradora</div>
+                </div>
+              </div>
+
+              <h3 className="text-3xl font-bold mb-8 text-center mt-16">La Espada: <span className="brand-accent">Estrategia Legal Contradefensiva</span></h3>
+              <div className="mb-12">
+                <h4 className="text-2xl font-bold mb-6 text-center"><span className="bg-gray-700 px-3 py-1 rounded">FASE 1: Fortificación de la Posición</span></h4>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="card red-line-card">
+                    <h5 className="text-xl font-bold mb-4">Mandato de Negociación</h5>
+                    <p className="text-gray-400 mb-4">Presentar contrapropuesta con enmiendas priorizadas.</p>
+                    <div className="space-y-3">
+                      <p className="font-bold text-red-400">Línea Roja (Innegociable):</p>
+                      <p className="pl-4">Eliminar Causal 10ª (terminación unilateral).</p>
+                      <p className="font-bold text-yellow-400">Alta Prioridad:</p>
+                      <p className="pl-4">Reducir penalidad por mora a un nivel de mercado.</p>
+                      <p className="font-bold text-green-400">Concesión a Ofrecer:</p>
+                      <p className="pl-4">Nombrar arrendador como "asegurado adicional" en póliza RC.</p>
+                    </div>
+                  </div>
+                  <div className="card">
+                    <h5 className="text-xl font-bold mb-4">Crear Rastro de Evidencia Inexpugnable</h5>
+                    <ul className="list-disc list-inside text-gray-300 space-y-2 flex-grow">
+                      <li>Toda comunicación con la administración debe ser por escrito y constatada por acta notarial.</li>
+                      <li>Documentar cumplimiento meticulosamente: fumigación, pagos, licencias.</li>
+                      <li>Contactar a la nueva administración formalmente para evaluar neutralidad y dejar registro.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div className="mb-12">
+                <h4 className="text-2xl font-bold mb-6 text-center"><span className="bg-gray-700 px-3 py-1 rounded">FASE 2: Maniobras Pre-emptivas</span></h4>
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                  <div className="lg:col-span-3 card">
+                    <h5 className="text-xl font-bold mb-4">Táctica Clave: <span className="brand-accent">Pago por Consignación</span></h5>
+                    <p className="text-gray-400 mb-6">Maniobra que neutraliza el ataque más probable (negativa a recibir el pago). Invierte la narrativa de "inquilino moroso" a "arrendador de mala fe".</p>
+                    <div className="flex flex-col space-y-4">
+                      <div className="flowchart-node">1. Arrendador rechaza pago</div>
+                      <div className="text-center text-2xl brand-accent">↓</div>
+                      <div className="flowchart-node">2. Se levanta acta notarial del rechazo</div>
+                      <div className="text-center text-2xl brand-accent">↓</div>
+                      <div className="flowchart-node">3. Se deposita la renta en un tribunal</div>
+                      <div className="text-center text-2xl brand-accent">↓</div>
+                      <div className="flowchart-node flex-1 bg-green-500/20 border-green-500">4. Amenaza de desahucio por impago NEUTRALIZADA</div>
+                    </div>
+                  </div>
+                  <div className="lg:col-span-2 card">
+                    <h5 className="text-xl font-bold mb-4">Opción Nuclear: <span className="brand-accent">Acción Declarativa</span></h5>
+                    <p className="text-gray-400 mb-6 flex-grow">Táctica ofensiva para que un juez declare nulas las cláusulas abusivas antes de que el adversario las use. Pone al arrendador a la defensiva.</p>
+                    <div className="chart-container h-64">
+                      <canvas id="riesgoChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-2xl font-bold mb-6 text-center"><span className="bg-gray-700 px-3 py-1 rounded">FASE 3: Contraofensiva</span></h4>
+                <div className="card">
+                  <h5 className="text-xl font-bold mb-4 text-center">Respuesta Agresiva y Simultánea (Si el Conflicto Estalla)</h5>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div>
+                      <p className="text-4xl mb-2">🛡️</p>
+                      <h6 className="font-bold text-lg text-white">Defensa Robusta</h6>
+                      <p className="text-gray-400">Demostrar cumplimiento con evidencia. Impugnar notificaciones. Argumentar abuso de derecho.</p>
+                    </div>
+                    <div>
+                      <p className="text-4xl mb-2">⚔️</p>
+                      <h6 className="font-bold text-lg text-white">Reconvención (Contrademanda)</h6>
+                      <p className="text-gray-400">Demandarlos por daños y perjuicios, acoso y violación al goce pacífico.</p>
+                    </div>
+                    <div>
+                      <p className="text-4xl mb-2">⚖️</p>
+                      <h6 className="font-bold text-lg text-white">Medidas Cautelares</h6>
+                      <p className="text-gray-400">Solicitar a juez orden para impedir corte de servicios o bloqueo de acceso durante el litigio.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="cronograma" className="mb-12">
+              <h2 className="text-3xl font-bold text-center mb-2">Cronograma de Acción Inmediato</h2>
+              <p className="text-center text-gray-400 mb-12 max-w-3xl mx-auto">Un plan de ejecución preciso para materializar la estrategia y fortificar la posición.</p>
+              <div className="relative pl-8 border-l-4 border-gray-600">
+                <div className="mb-12 timeline-item">
+                  <h3 className="text-2xl font-bold brand-accent mb-2">Inmediato (Días 1-15)</h3>
+                  <ul className="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Finalizar la lista de "líneas rojas" para la negociación del contrato.</li>
+                    <li>Contactar al corredor de seguros con el plan y el dossier institucional.</li>
+                    <li>Enviar carta introductoria formal a Americanet para establecer un tono profesional.</li>
+                  </ul>
+                </div>
+                <div className="mb-12 timeline-item">
+                  <h3 className="text-2xl font-bold brand-accent mb-2">Corto Plazo (Mes 1)</h3>
+                  <ul className="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Llevar a cabo la negociación del contrato con el arrendador.</li>
+                    <li>Obtener las pólizas de seguro requeridas (o compromisos de cobertura - "binders").</li>
+                    <li>Preparar borradores legales para un eventual "Pago por Consignación".</li>
+                  </ul>
+                </div>
+                <div className="timeline-item">
+                  <h3 className="text-2xl font-bold brand-accent mb-2">Contingente (Ante Acto Hostil)</h3>
+                  <ul className="list-disc list-inside text-gray-300 space-y-2">
+                    <li>Ejecutar de inmediato el "Pago por Consignación" en sede judicial.</li>
+                    <li>Presentar escritos de respuesta y reconvenciones.</li>
+                    <li>Notificar a la aseguradora para activar la "obligación de defensa".</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+          </main>
+
+          <footer className="text-center mt-20 pt-8 border-t border-gray-700">
+            <p className="text-sm text-gray-500">Información Estratégica Confidencial. El objetivo no es solo sobrevivir, sino crear una posición tan fortificada que el adversario sea disuadido de iniciar hostilidades.</p>
+            <p className="text-xs text-gray-600 mt-2">Documento generado: 5 de julio de 2025</p>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
