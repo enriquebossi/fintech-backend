@@ -1,11 +1,474 @@
-// ...después de const answer = …
-if (process.env.SLACK_WEBHOOK_URL) {
-  await fetch(process.env.SLACK_WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      channel: '#lean2-dev',               // fuerza canal destino
-      text: `🤖 Cosmo responde: ${answer}`
-    })
-  });
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva de Despliegue: Proyecto Lean 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        .nav-link {
+            cursor: pointer;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-link.active { background-color: #4f46e5; color: white; }
+        .nav-link:not(.active):hover { background-color: #eef2ff; }
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 50; opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+        .modal-backdrop.visible { opacity: 1; visibility: visible; }
+        .modal-content {
+            background-color: white; padding: 2rem; border-radius: 0.75rem;
+            max-width: 90%; width: 600px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        .modal-backdrop.visible .modal-content { transform: scale(1); }
+        .flow-node { transition: all 0.3s ease; cursor: pointer; }
+        .flow-node:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .flow-arrow { position: relative; font-size: 2rem; color: #9ca3af; }
+        .ping-path { transition: all 0.5s ease-in-out; }
+        .ping-path.highlighted { stroke: #4f46e5; stroke-width: 3; }
+        .ping-dot { transition: all 1s ease-in-out; fill: #4f46e5; r: 0; }
+        .ping-dot.visible { r: 8; }
+        .chart-container { position: relative; width: 100%; max-width: 500px; margin-left: auto; margin-right: auto; height: 300px; max-height: 350px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-indigo-600 mb-2">Proyecto Lean 2</h1>
+            <p class="text-lg text-slate-600">Guía Interactiva de Arquitectura y Despliegue</p>
+        </header>
+        <nav class="flex flex-wrap justify-center gap-2 md:gap-4 mb-12" id="main-nav">
+            <a data-target="arquitectura" class="nav-link active">1. Arquitectura</a>
+            <a data-target="prerrequisitos" class="nav-link">2. Prerrequisitos</a>
+            <a data-target="despliegue" class="nav-link">3. Despliegue</a>
+            <a data-target="verificacion" class="nav-link">4. Verificación</a>
+            <a data-target="resolucion" class="nav-link">5. Soporte</a>
+        </nav>
+        <main id="main-content">
+            <section id="arquitectura" class="content-section active">
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold mb-2 text-center">Arquitectura del Sistema</h2>
+                    <p class="text-slate-600 mb-8 text-center max-w-3xl mx-auto">
+                        Lean 2 utiliza una arquitectura moderna sin servidor que separa la interfaz de usuario de los servicios de backend. Haga clic en cada componente del diagrama para explorar su función y cómo se conectan entre sí para dar vida a la aplicación.
+                    </p>
+                    <div class="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-8 text-center">
+                        <div class="flow-node bg-indigo-50 border-2 border-indigo-200 p-4 rounded-lg shadow-md w-48" data-modal="index-html">
+                            <span class="text-4xl">🖥️</span>
+                            <h3 class="font-semibold mt-2">UI de Chat</h3>
+                            <p class="text-sm text-slate-500">/public/index.html</p>
+                        </div>
+                        <div class="flow-arrow hidden md:block">→</div>
+                        <div class="flow-arrow block md:hidden">↓</div>
+                        <div class="flow-node bg-green-50 border-2 border-green-200 p-4 rounded-lg shadow-md w-48" data-modal="api-chat">
+                            <span class="text-4xl">🤖</span>
+                            <h3 class="font-semibold mt-2">API de Chat</h3>
+                            <p class="text-sm text-slate-500">/api/chat.js</p>
+                        </div>
+                        <div class="flow-arrow hidden md:block">→</div>
+                        <div class="flow-arrow block md:hidden">↓</div>
+                        <div class="flex flex-col space-y-4">
+                            <div class="flow-node bg-sky-50 border-2 border-sky-200 p-4 rounded-lg shadow-md w-48" data-modal="api-xibalba">
+                                <span class="text-4xl">💾</span>
+                                <h3 class="font-semibold mt-2">Almacenamiento</h3>
+                                <p class="text-sm text-slate-500">/api/xibalba-mini.js</p>
+                            </div>
+                            <div class="flow-node bg-slate-100 border-2 border-slate-200 p-4 rounded-lg shadow-md w-48" data-modal="vercel-json">
+                                <span class="text-4xl">⚙️</span>
+                                <h3 class="font-semibold mt-2">Configuración Vercel</h3>
+                                <p class="text-sm text-slate-500">/vercel.json</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="prerrequisitos" class="content-section">
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold mb-2 text-center">Variables de Entorno</h2>
+                    <p class="text-slate-600 mb-8 text-center max-w-3xl mx-auto">
+                        Antes de desplegar, es crucial configurar estas variables en Vercel. Son la clave para que la aplicación se comunique con servicios externos de forma segura. El gráfico muestra la criticidad de mantener estas claves protegidas.
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <ul class="space-y-4">
+                                <li class="flex items-start p-4 bg-slate-50 rounded-lg">
+                                    <span class="text-2xl mr-4">🔑</span>
+                                    <div>
+                                        <h3 class="font-bold text-lg">OPENAI_API_KEY</h3>
+                                        <p class="text-slate-500 text-sm">Autentica con la API de OpenAI.</p>
+                                        <button class="text-indigo-600 font-semibold mt-1 text-sm" data-modal="var-openai">Ver detalles</button>
+                                    </div>
+                                </li>
+                                <li class="flex items-start p-4 bg-slate-50 rounded-lg">
+                                    <span class="text-2xl mr-4">🆔</span>
+                                    <div>
+                                        <h3 class="font-bold text-lg">ASSISTANT_ID</h3>
+                                        <p class="text-slate-500 text-sm">Identifica el asistente de IA a usar.</p>
+                                        <button class="text-indigo-600 font-semibold mt-1 text-sm" data-modal="var-assistant">Ver detalles</button>
+                                    </div>
+                                </li>
+                                <li class="flex items-start p-4 bg-slate-50 rounded-lg">
+                                    <span class="text-2xl mr-4">🔗</span>
+                                    <div>
+                                        <h3 class="font-bold text-lg">SLACK_WEBHOOK_URL</h3>
+                                        <p class="text-slate-500 text-sm">Permite enviar mensajes a Slack.</p>
+                                        <button class="text-indigo-600 font-semibold mt-1 text-sm" data-modal="var-slack-url">Ver detalles</button>
+                                    </div>
+                                </li>
+                                <li class="flex items-start p-4 bg-slate-50 rounded-lg">
+                                    <span class="text-2xl mr-4">#️⃣</span>
+                                    <div>
+                                        <h3 class="font-bold text-lg">SLACK_CHANNEL</h3>
+                                        <p class="text-slate-500 text-sm">Define el canal de Slack de destino.</p>
+                                        <button class="text-indigo-600 font-semibold mt-1 text-sm" data-modal="var-slack-channel">Ver detalles</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="securityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="despliegue" class="content-section">
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold mb-2 text-center">Proceso de Despliegue</h2>
+                    <p class="text-slate-600 mb-8 text-center max-w-3xl mx-auto">
+                        Siga estos tres pasos para llevar Lean 2 a producción. El proceso comienza clonando el código y finaliza con un simple comando en su terminal.
+                    </p>
+                    <div class="max-w-2xl mx-auto space-y-8">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-indigo-500 text-white rounded-full h-10 w-10 flex items-center justify-center font-bold text-lg">1</div>
+                            <div class="ml-4">
+                                <h3 class="text-xl font-semibold">Clonar el Repositorio</h3>
+                                <p class="text-slate-600 mt-1">Obtenga el código fuente desde el canvas "Lean2 Codebase" a su máquina local. Esto establece la base para el despliegue.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-indigo-500 text-white rounded-full h-10 w-10 flex items-center justify-center font-bold text-lg">2</div>
+                            <div class="ml-4">
+                                <h3 class="text-xl font-semibold">Añadir Variables en Vercel</h3>
+                                <p class="text-slate-600 mt-1">Vaya a la configuración de su proyecto en Vercel y añada las variables de entorno de la sección de <a href="#" class="text-indigo-600 font-semibold underline" onclick="document.querySelector('[data-target=prerrequisitos]').click()">Prerrequisitos</a>. Este paso es esencial para la funcionalidad.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-indigo-500 text-white rounded-full h-10 w-10 flex items-center justify-center font-bold text-lg">3</div>
+                            <div class="ml-4">
+                                <h3 class="text-xl font-semibold">Desplegar a Producción</h3>
+                                <p class="text-slate-600 mt-1">Ejecute el siguiente comando en la terminal, dentro de la carpeta de su proyecto. Esto iniciará el proceso de construcción y despliegue en Vercel.</p>
+                                <div class="mt-4 bg-slate-900 rounded-lg p-4 flex items-center justify-between">
+                                    <code class="text-green-400" id="deploy-command">vercel --prod</code>
+                                    <button onclick="copyCommand()" class="bg-slate-700 text-white text-sm font-medium py-1 px-3 rounded-md hover:bg-slate-600 transition">Copiar</button>
+                                </div>
+                                <p id="copy-feedback" class="text-sm text-green-600 mt-2 opacity-0 transition">¡Copiado!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="verificacion" class="content-section">
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold mb-2 text-center">Verificación Operacional: La Prueba "Ping"</h2>
+                    <p class="text-slate-600 mb-8 text-center max-w-3xl mx-auto">
+                        Una vez desplegado, realice la prueba de "ping". Esta no es una prueba de red, sino una validación completa del sistema. Envíe "ping" en la UI de chat. El diagrama simula el flujo de datos que debe ocurrir.
+                    </p>
+                    <div class="text-center mb-8">
+                        <button id="ping-test-btn" class="bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 transition">▶️ Iniciar Simulación de Prueba</button>
+                    </div>
+                    <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 relative">
+                        <svg class="absolute w-full h-full" style="z-index: 0;">
+                            <path id="path1" d="M 100 50 H 300" stroke="#d1d5db" stroke-width="2" fill="none" class="ping-path"/>
+                            <path id="path2" d="M 350 50 Q 450 50 450 150" stroke="#d1d5db" stroke-width="2" fill="none" class="ping-path"/>
+                            <path id="path3" d="M 450 150 Q 450 250 350 250" stroke="#d1d5db" stroke-width="2" fill="none" class="ping-path"/>
+                            <path id="path4" d="M 300 250 H 100" stroke="#d1d5db" stroke-width="2" fill="none" class="ping-path"/>
+                            <g transform="translate(0, 200)">
+                                <path id="path5" d="M 350 50 Q 250 50 250 -50" stroke="#d1d5db" stroke-width="2" fill="none" class="ping-path"/>
+                                <path id="path6" d="M 250 -50 Q 150 -50 150 50" stroke="#d1d5db" stroke-width="2" fill="none" class="ping-path"/>
+                            </g>
+                        </svg>
+                        <div id="ping-user" class="relative z-10 flex flex-col items-center bg-white p-3 rounded-lg border-2 border-transparent w-40">
+                            <span class="text-4xl">🧑‍💻</span><h3 class="font-semibold mt-1">Usuario</h3><p class="text-sm text-slate-500">Inicia 'ping'</p>
+                            <circle cx="0" cy="-30" class="ping-dot" id="dot-user"/>
+                        </div>
+                        <span class="text-4xl text-slate-400 mx-4">→</span>
+                        <div id="ping-ui" class="relative z-10 flex flex-col items-center bg-white p-3 rounded-lg border-2 border-transparent w-40">
+                            <span class="text-4xl">💬</span><h3 class="font-semibold mt-1">UI de Chat</h3><p class="text-sm text-slate-500">Envía request</p>
+                            <circle cx="0" cy="-30" class="ping-dot" id="dot-ui"/>
+                        </div>
+                        <span class="text-4xl text-slate-400 mx-4">→</span>
+                        <div id="ping-api" class="relative z-10 flex flex-col items-center bg-white p-3 rounded-lg border-2 border-transparent w-40">
+                            <span class="text-4xl">🚀</span><h3 class="font-semibold mt-1">API Chat.js</h3><p class="text-sm text-slate-500">Procesa y retransmite</p>
+                            <circle cx="0" cy="-30" class="ping-dot" id="dot-api"/>
+                        </div>
+                        <span class="text-4xl text-slate-400 mx-4">→</span>
+                        <div class="flex flex-col space-y-4">
+                            <div id="ping-slack" class="relative z-10 flex flex-col items-center bg-white p-3 rounded-lg border-2 border-transparent w-40">
+                                <span class="text-4xl">📢</span><h3 class="font-semibold mt-1">Slack</h3><p class="text-sm text-slate-500">Recibe mensaje</p>
+                                <circle cx="0" cy="-30" class="ping-dot" id="dot-slack"/>
+                            </div>
+                            <div id="ping-ui-response" class="relative z-10 flex flex-col items-center bg-white p-3 rounded-lg border-2 border-transparent w-40">
+                                <span class="text-4xl">✅</span><h3 class="font-semibold mt-1">UI (Respuesta)</h3><p class="text-sm text-slate-500">Muestra resultado</p>
+                                <circle cx="0" cy="-30" class="ping-dot" id="dot-ui-response"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-12 text-center">
+                        <h3 class="text-xl font-bold mb-4">Resultados Esperados</h3>
+                        <div class="flex flex-col md:flex-row justify-center gap-8">
+                            <div class="bg-green-50 border border-green-200 p-4 rounded-lg flex-1">
+                                <h4 class="font-semibold text-green-800">1. En la UI del Chat</h4>
+                                <p class="text-green-700">Debe aparecer una respuesta confirmando la recepción del "ping".</p>
+                            </div>
+                            <div class="bg-sky-50 border border-sky-200 p-4 rounded-lg flex-1">
+                                <h4 class="font-semibold text-sky-800">2. En Slack</h4>
+                                <p class="text-sky-700">Un mensaje debe aparecer en el canal <code class="bg-sky-100 p-1 rounded">#cosmic-nexus-it</code>.</p>
+                            </div>
+                        </div>
+                        <p class="mt-6 font-semibold">Si ambos ocurren, publique <code class="bg-slate-200 p-1 rounded">✅ Lean 2 listo</code> en Slack.</p>
+                    </div>
+                </div>
+            </section>
+            <section id="resolucion" class="content-section">
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold mb-2 text-center">Resolución de Problemas</h2>
+                    <p class="text-slate-600 mb-8 text-center max-w-3xl mx-auto">
+                        Si encuentra un problema, es probable que la causa sea una de las siguientes. Revise los registros de Vercel para obtener un error específico y poder solucionarlo rápidamente.
+                    </p>
+                    <div class="max-w-3xl mx-auto space-y-4" id="accordion">
+                        <div class="border border-slate-200 rounded-lg">
+                            <button class="accordion-header w-full text-left p-4 font-semibold text-lg flex justify-between items-center hover:bg-slate-50">
+                                <span>Errores en Variables de Entorno</span>
+                                <span class="accordion-icon transform rotate-0 transition-transform">▼</span>
+                            </button>
+                            <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+                                <p class="p-4 pt-0 text-slate-600">Verifique dos veces que los nombres y valores de las variables en Vercel coincidan exactamente con lo requerido. Un error tipográfico, un espacio extra o un nombre incorrecto son causas comunes de fallo. Las claves deben ser copiadas sin modificaciones.</p>
+                            </div>
+                        </div>
+                        <div class="border border-slate-200 rounded-lg">
+                            <button class="accordion-header w-full text-left p-4 font-semibold text-lg flex justify-between items-center hover:bg-slate-50">
+                                <span>Fallos de Autorización de API</span>
+                                <span class="accordion-icon transform rotate-0 transition-transform">▼</span>
+                            </button>
+                            <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+                                <p class="p-4 pt-0 text-slate-600">Las solicitudes a OpenAI o Slack pueden ser rechazadas si la `OPENAI_API_KEY` o la `SLACK_WEBHOOK_URL` son inválidas, han sido revocadas o han caducado. Genere una nueva clave o URL si sospecha que este es el problema.</p>
+                            </div>
+                        </div>
+                        <div class="border border-slate-200 rounded-lg">
+                            <button class="accordion-header w-full text-left p-4 font-semibold text-lg flex justify-between items-center hover:bg-slate-50">
+                                <span>Errores de Configuración en `vercel.json`</span>
+                                <span class="accordion-icon transform rotate-0 transition-transform">▼</span>
+                            </button>
+                            <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+                                <p class="p-4 pt-0 text-slate-600">Reglas de reescritura (`rewrites`) incorrectas pueden impedir que las solicitudes de la UI lleguen a los `endpoints` correctos de la API (`/api/chat.js`). Asegúrese de que la configuración de enrutamiento esté correctamente definida para una SPA.</p>
+                            </div>
+                        </div>
+                        <div class="border border-slate-200 rounded-lg">
+                            <button class="accordion-header w-full text-left p-4 font-semibold text-lg flex justify-between items-center hover:bg-slate-50">
+                                <span>Errores de Código en las Funciones</span>
+                                <span class="accordion-icon transform rotate-0 transition-transform">▼</span>
+                            </button>
+                            <div class="accordion-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
+                                <p class="p-4 pt-0 text-slate-600">Un error lógico o de sintaxis dentro de `api/chat.js` o `api/xibalba-mini.js` puede causar una excepción en tiempo de ejecución. Los registros de Vercel (Runtime Logs) son su mejor herramienta para identificar la línea de código exacta que está fallando.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div id="modal" class="modal-backdrop">
+        <div id="modal-content" class="modal-content">
+            <h3 id="modal-title" class="text-2xl font-bold mb-4"></h3>
+            <div id="modal-body" class="text-slate-600 space-y-4"></div>
+            <button id="modal-close" class="mt-6 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg w-full hover:bg-indigo-700 transition">Cerrar</button>
+        </div>
+    </div>
+    <script>
+        const modalData = {
+            "index-html": {
+                title: "UI de Chat (/public/index.html)",
+                body: `<p>Este archivo es el punto de entrada y la interfaz de usuario de la aplicación. Es una Aplicación de Una Sola Página (SPA) que renderiza la interfaz del chat, maneja la entrada del usuario y se comunica con el backend a través de llamadas a la API Fetch.</p><p><strong>Función Clave:</strong> Proporcionar la experiencia interactiva al usuario final.</p>`
+            },
+            "api-chat": {
+                title: "API de Chat (/api/chat.js)",
+                body: `<p>Este es el cerebro de la aplicación. Es un endpoint de backend que realiza dos tareas críticas:</p><ul class="list-disc list-inside mt-2 space-y-1"><li><strong>Cosmo Triage:</strong> Utiliza la API de OpenAI para analizar y procesar los mensajes de chat entrantes de forma inteligente.</li><li><strong>Slack Relay:</strong> Reenvía mensajes procesados o alertas directamente a un canal de Slack designado.</li></ul>`
+            },
+            "api-xibalba": {
+                title: "Almacenamiento JSON (/api/xibalba-mini.js)",
+                body: `<p>Este endpoint gestiona el \"Mini Xibalbá JSON storage\". Es un servicio de backend simple y personalizado para almacenar y recuperar datos en formato JSON, como configuraciones de la aplicación o historiales de chat.</p><p><strong>Función Clave:</strong> Persistencia de datos ligera.</p>`
+            },
+            "vercel-json": {
+                title: "Configuración de Vercel (/vercel.json)",
+                body: `<p>Este archivo le dice a Vercel cómo desplegar el proyecto. Su función más importante aquí es la regla de reescritura (\"rewrite\") que dirige todas las solicitudes a <strong>index.html</strong>. Esto es lo que permite que la aplicación funcione como una SPA con URLs limpias.</p>`
+            },
+            "var-openai": {
+                title: "OPENAI_API_KEY",
+                body: `<p><strong>Propósito:</strong> Autentica las solicitudes a los servicios de OpenAI. Es la credencial que prueba que la aplicación tiene permiso para usar modelos como GPT-4.</p><p><strong>Origen:</strong> Se genera en el panel de control de su cuenta de OpenAI.</p><p><strong>Seguridad:</strong> <span class="font-bold text-red-600">Alta.</span> Esta clave vincula el uso a su cuenta y facturación. Manténgala confidencial y nunca la exponga en el código del lado del cliente.</p>`
+            },
+            "var-assistant": {
+                title: "ASSISTANT_ID",
+                body: `<p><strong>Propósito:</strong> Identifica a un Asistente de OpenAI específico y preconfigurado con el que \"Cosmo Triage\" debe interactuar. Esto permite dirigir los chats a una IA con instrucciones y herramientas específicas.</p><p><strong>Origen:</strong> Se encuentra en el panel de la plataforma de OpenAI después de crear un Asistente.</p><p><strong>Seguridad:</strong> <span class="font-bold text-orange-600">Media.</span> No es una clave secreta, pero identifica la configuración de IA. No debe ser alterado sin conocimiento.</p>`
+            },
+            "var-slack-url": {
+                title: "SLACK_WEBHOOK_URL",
+                body: `<p><strong>Propósito:</strong> Es una URL única que permite a la aplicación publicar mensajes directamente en un canal de Slack sin una autenticación compleja.</p><p><strong>Origen:</strong> Se genera en la configuración de su aplicación de Slack al habilitar \"Incoming Webhooks\".</p><p><strong>Seguridad:</strong> <span class="font-bold text-red-600">Alta.</span> Cualquiera con esta URL puede publicar en su canal. Si se filtra, Slack puede revocarla automáticamente.</p>`
+            },
+            "var-slack-channel": {
+                title: "SLACK_CHANNEL",
+                body: `<p><strong>Propósito:</strong> Define explícitamente el nombre del canal de Slack de destino, por ejemplo, <code class="bg-slate-200 p-1 rounded">#cosmic-nexus-it</code>. Asegura que los mensajes se enruten al lugar correcto.</p><p><strong>Origen:</strong> Valor predefinido en las instrucciones.</p><p><strong>Seguridad:</strong> <span class="font-bold text-green-600">Baja.</span> Es un identificador lógico, no una credencial, pero es crucial para el enrutamiento correcto.</p>`
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.content-section');
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalClose = document.getElementById('modal-close');
+
+            const openModal = (id) => {
+                const data = modalData[id];
+                if (!data) return;
+                modalTitle.textContent = data.title;
+                modalBody.innerHTML = data.body;
+                modal.classList.add('visible');
+            };
+            const closeModal = () => { modal.classList.remove('visible'); };
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const targetId = link.dataset.target;
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    link.classList.add('active');
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetId) { section.classList.add('active'); }
+                    });
+                    if (targetId === 'prerrequisitos' && !window.securityChartInstance) { renderSecurityChart(); }
+                });
+            });
+            document.querySelectorAll('[data-modal]').forEach(el => { el.addEventListener('click', () => openModal(el.dataset.modal)); });
+            modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+            modalClose.addEventListener('click', closeModal);
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.accordion-icon');
+                    header.parentElement.classList.toggle('open');
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null; icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
+                        document.querySelectorAll('.accordion-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+                        content.style.maxHeight = content.scrollHeight + 'px'; icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+            document.getElementById('ping-test-btn').addEventListener('click', runPingTest);
+        });
+
+        function copyCommand() {
+            const command = document.getElementById('deploy-command').innerText;
+            navigator.clipboard.writeText(command).then(() => {
+                const feedback = document.getElementById('copy-feedback');
+                feedback.style.opacity = '1';
+                setTimeout(() => { feedback.style.opacity = '0'; }, 2000);
+            });
+        }
+
+        function renderSecurityChart() {
+            const ctx = document.getElementById('securityChart').getContext('2d');
+            const data = {
+                labels: ['OPENAI_API_KEY', 'SLACK_WEBHOOK_URL', 'ASSISTANT_ID', 'SLACK_CHANNEL'],
+                datasets: [{
+                    label: 'Nivel de Criticidad de Seguridad',
+                    data: [10, 10, 6, 2],
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.6)',
+                        'rgba(239, 68, 68, 0.6)',
+                        'rgba(249, 115, 22, 0.6)',
+                        'rgba(34, 197, 94, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(249, 115, 22, 1)',
+                        'rgba(34, 197, 94, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+            window.securityChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.x !== null) {
+                                        const val = context.parsed.x;
+                                        if (val >= 9) label += 'Alta';
+                                        else if (val >= 5) label += 'Media';
+                                        else label += 'Baja';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, max: 10, display: false },
+                        y: { ticks: { callback: function(value){ const label = this.getLabelForValue(value); return label.length > 15 ? label.substring(0,15)+'...' : label; } } }
+                    }
+                }
+            });
+        }
+
+        function runPingTest() {
+            const nodes = ['ping-user','ping-ui','ping-api','ping-slack','ping-ui-response'];
+            const btn = document.getElementById('ping-test-btn');
+            btn.disabled = true; btn.textContent = 'Simulación en progreso...';
+            let i = 0;
+            const highlightNode = () => {
+                if (i > 0) { document.getElementById(nodes[i-1]).classList.remove('border-indigo-500','bg-indigo-50'); }
+                if (i < nodes.length) {
+                    const node = document.getElementById(nodes[i]);
+                    node.classList.add('border-indigo-500','bg-indigo-50');
+                    i++; setTimeout(highlightNode, 1000);
+                } else { btn.disabled = false; btn.innerHTML = '▶️ Reiniciar Simulación'; }
+            };
+            nodes.forEach(id => document.getElementById(id).classList.remove('border-indigo-500','bg-indigo-50'));
+            highlightNode();
+        }
+    </script>
+</body>
+</html>
