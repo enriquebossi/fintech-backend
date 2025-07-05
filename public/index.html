@@ -1,11 +1,125 @@
-// ...después de const answer = …
-if (process.env.SLACK_WEBHOOK_URL) {
-  await fetch(process.env.SLACK_WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      channel: '#lean2-dev',               // fuerza canal destino
-      text: `🤖 Cosmo responde: ${answer}`
-    })
-  });
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fintech Landing Page</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    nav { background-color: #333; padding: 1rem; }
+    nav a { color: white; margin-right: 1rem; text-decoration: none; }
+    main { padding: 1rem; }
+    .card-container { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .card { border: 1px solid #ccc; padding: 1rem; border-radius: 4px; width: 200px; }
+    #gantt-chart { margin-top: 2rem; }
+    #gantt-chart table { width: 100%; border-collapse: collapse; }
+    #gantt-chart th, #gantt-chart td { border: 1px solid #ddd; padding: 4px; text-align: left; }
+    #raci-table { margin-top: 2rem; border-collapse: collapse; width: 100%; }
+    #raci-table th, #raci-table td { border: 1px solid #ddd; padding: 4px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script type="text/javascript">
+    const e = React.createElement;
+
+    function Nav() {
+      return (
+        e('nav', { id: 'main-nav' },
+          e('a', { href: '#personas' }, 'Personas'),
+          e('a', { href: '#gantt' }, 'Gantt'),
+          e('a', { href: '#raci' }, 'RACI')
+        )
+      );
+    }
+
+    function PersonaCards() {
+      const personas = [
+        { id: 1, name: 'Alice', role: 'Analyst' },
+        { id: 2, name: 'Bob', role: 'Engineer' },
+        { id: 3, name: 'Carol', role: 'Manager' }
+      ];
+      return e('section', { id: 'personas' },
+        e('h2', null, 'Persona Cards'),
+        e('div', { className: 'card-container' },
+          personas.map(p => e('div', { key: p.id, className: 'card' },
+            e('h3', null, p.name),
+            e('p', null, p.role)
+          ))
+        )
+      );
+    }
+
+    function GanttChart() {
+      const tasks = [
+        { id: 1, task: 'Planning', start: '2025-07-01', end: '2025-07-05' },
+        { id: 2, task: 'Development', start: '2025-07-06', end: '2025-07-20' },
+        { id: 3, task: 'Launch', start: '2025-07-21', end: '2025-07-31' }
+      ];
+      return e('section', { id: 'gantt' },
+        e('h2', null, 'Gantt Chart'),
+        e('table', { id: 'gantt-chart' },
+          e('thead', null,
+            e('tr', null,
+              e('th', null, 'Task'),
+              e('th', null, 'Start'),
+              e('th', null, 'End')
+            )
+          ),
+          e('tbody', null,
+            tasks.map(t => e('tr', { key: t.id },
+              e('td', null, t.task),
+              e('td', null, t.start),
+              e('td', null, t.end)
+            ))
+          )
+        )
+      );
+    }
+
+    function RACIMatrix() {
+      const roles = ['R', 'A', 'C', 'I'];
+      const tasks = [
+        { id: 1, name: 'Plan' },
+        { id: 2, name: 'Develop' },
+        { id: 3, name: 'Release' }
+      ];
+      return e('section', { id: 'raci' },
+        e('h2', null, 'RACI Matrix'),
+        e('table', { id: 'raci-table' },
+          e('thead', null,
+            e('tr', null,
+              e('th', null, 'Task'),
+              roles.map(r => e('th', { key: r }, r))
+            )
+          ),
+          e('tbody', null,
+            tasks.map(t => e('tr', { key: t.id },
+              e('td', null, t.name),
+              roles.map(r => e('td', { key: r }, '-'))
+            ))
+          )
+        )
+      );
+    }
+
+    function App() {
+      return (
+        e(React.Fragment, null,
+          e(Nav),
+          e('main', null,
+            e(PersonaCards),
+            e(GanttChart),
+            e(RACIMatrix)
+          )
+        )
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(e(App));
+  </script>
+</body>
+</html>
