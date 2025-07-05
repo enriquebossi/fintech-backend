@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; line-height: 1.6; }
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { margin: 0; }
+        .timeline { list-style: none; padding: 0; }
+        .timeline li { margin-bottom: 20px; position: relative; padding-left: 20px; }
+        .timeline li::before { content: ""; position: absolute; left: 0; top: 5px; width: 10px; height: 10px; background: #333; border-radius: 50%; }
+        .personas { display: flex; gap: 20px; flex-wrap: wrap; }
+        .persona { border: 1px solid #ccc; border-radius: 4px; padding: 10px; width: 200px; text-align: center; }
+        .persona img { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; }
+        .diagram { text-align: center; margin: 40px 0; }
+        .raci { border-collapse: collapse; width: 100%; }
+        .raci th, .raci td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        .raci th { background-color: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Project Dashboard</h1>
+    </header>
+
+    <section>
+        <h2>Timeline</h2>
+        <ul class="timeline">
+            <li><strong>Jan:</strong> Project kickoff</li>
+            <li><strong>Feb:</strong> Requirements gathering</li>
+            <li><strong>Mar:</strong> Prototype development</li>
+            <li><strong>Apr:</strong> User testing</li>
+            <li><strong>May:</strong> Launch</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Personas</h2>
+        <div class="personas">
+            <div class="persona">
+                <img src="https://via.placeholder.com/200x150" alt="Analyst" />
+                <h3>Analyst Alice</h3>
+                <p>Focuses on data-driven insights.</p>
+            </div>
+            <div class="persona">
+                <img src="https://via.placeholder.com/200x150" alt="Developer" />
+                <h3>Developer Dan</h3>
+                <p>Implements product features.</p>
+            </div>
+            <div class="persona">
+                <img src="https://via.placeholder.com/200x150" alt="Manager" />
+                <h3>Manager Maria</h3>
+                <p>Oversees deliverables and timelines.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="diagram">
+        <h2>Architecture Diagram</h2>
+        <img src="https://via.placeholder.com/600x300" alt="Architecture Diagram" />
+    </section>
+
+    <section>
+        <h2>RACI Matrix</h2>
+        <table class="raci">
+            <tr>
+                <th>Task</th>
+                <th>Analyst</th>
+                <th>Developer</th>
+                <th>Manager</th>
+            </tr>
+            <tr>
+                <td>Requirements</td>
+                <td>R</td>
+                <td>C</td>
+                <td>A</td>
+            </tr>
+            <tr>
+                <td>Implementation</td>
+                <td>C</td>
+                <td>R</td>
+                <td>A</td>
+            </tr>
+            <tr>
+                <td>Testing</td>
+                <td>C</td>
+                <td>R</td>
+                <td>A</td>
+            </tr>
+        </table>
+    </section>
+</body>
+</html>
