@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fintech Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; line-height: 1.5; }
+        header { text-align: center; margin-bottom: 2rem; }
+        .timeline { list-style: none; padding: 0; position: relative; }
+        .timeline::before { content: ""; position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: #ccc; }
+        .timeline li { margin: 1rem 0 1rem 40px; }
+        .personas { display: flex; flex-wrap: wrap; gap: 1rem; }
+        .card { border: 1px solid #ddd; padding: 1rem; border-radius: 4px; width: 220px; }
+        .card h3 { margin-top: 0; }
+        .raci { border-collapse: collapse; width: 100%; }
+        .raci th, .raci td { border: 1px solid #888; padding: 8px; text-align: center; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Fintech Project Dashboard</h1>
+    </header>
+
+    <section>
+        <h2>Timeline</h2>
+        <ol class="timeline">
+            <li><strong>Week 1:</strong> Project kickoff and requirement gathering</li>
+            <li><strong>Week 2:</strong> Architecture design and tooling setup</li>
+            <li><strong>Week 3:</strong> Initial development and integrations</li>
+            <li><strong>Week 4:</strong> Testing and stakeholder review</li>
+            <li><strong>Week 5:</strong> Launch preparation and deployment</li>
+        </ol>
+    </section>
+
+    <section>
+        <h2>Personas</h2>
+        <div class="personas">
+            <div class="card">
+                <h3>Ana – Finance Lead</h3>
+                <p>Oversees compliance and financial reporting for the platform.</p>
+            </div>
+            <div class="card">
+                <h3>Carlos – Developer</h3>
+                <p>Implements API integrations and ensures code quality.</p>
+            </div>
+            <div class="card">
+                <h3>María – Product Owner</h3>
+                <p>Defines product roadmap and prioritizes the backlog.</p>
+            </div>
+            <div class="card">
+                <h3>Sofia – Operations</h3>
+                <p>Manages day‑to‑day user issues and support tickets.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Architecture</h2>
+        <p><img src="https://via.placeholder.com/600x350?text=Architecture+Diagram" alt="Architecture diagram" style="max-width:100%;"></p>
+    </section>
+
+    <section>
+        <h2>RACI Matrix</h2>
+        <table class="raci">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Responsible</th>
+                    <th>Accountable</th>
+                    <th>Consulted</th>
+                    <th>Informed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Requirements</td>
+                    <td>María</td>
+                    <td>Ana</td>
+                    <td>Carlos</td>
+                    <td>Sofia</td>
+                </tr>
+                <tr>
+                    <td>Development</td>
+                    <td>Carlos</td>
+                    <td>María</td>
+                    <td>Ana</td>
+                    <td>Sofia</td>
+                </tr>
+                <tr>
+                    <td>Testing</td>
+                    <td>Sofia</td>
+                    <td>Carlos</td>
+                    <td>María</td>
+                    <td>Ana</td>
+                </tr>
+                <tr>
+                    <td>Deployment</td>
+                    <td>Carlos</td>
+                    <td>Ana</td>
+                    <td>María</td>
+                    <td>Sofia</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</body>
+</html>
