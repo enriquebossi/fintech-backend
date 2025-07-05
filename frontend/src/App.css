@@ -1,0 +1,46 @@
+.container {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  line-height: 1.6;
+}
+
+.timeline {
+  list-style: none;
+  padding-left: 0;
+}
+.timeline li {
+  margin-bottom: 10px;
+}
+
+.personas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  width: 200px;
+}
+
+table.raci {
+  border-collapse: collapse;
+  width: 100%;
+}
+table.raci th,
+table.raci td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+table.raci th {
+  background: #f4f4f4;
+}
+
+.diagram {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
