@@ -27,6 +27,14 @@ const signer = new ethers.Wallet(process.env.PRIVATE_KEY || ethers.Wallet.create
 const credit = new ethers.Contract(process.env.CREDIT_TOKEN_ADDRESS || ethers.ZeroAddress, creditAbi, signer);
 const nft = new ethers.Contract(process.env.NFT_ADDRESS || ethers.ZeroAddress, nftAbi, signer);
 
+// Endpoint to expose select environment variables to the frontend
+app.get('/api/config', (req, res) => {
+    res.json({
+        trackerUrl: process.env.TRACKER_URL || '',
+        slackWebhookUrl: process.env.SLACK_WEBHOOK_URL || ''
+    });
+});
+
 app.post('/api/query-supabase', async (req, res) => {
     const { prompt, tableName } = req.body;
     if (!prompt || !tableName) {

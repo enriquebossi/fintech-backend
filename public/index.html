@@ -1,11 +1,29 @@
-// ...después de const answer = …
-if (process.env.SLACK_WEBHOOK_URL) {
-  await fetch(process.env.SLACK_WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      channel: '#lean2-dev',               // fuerza canal destino
-      text: `🤖 Cosmo responde: ${answer}`
-    })
-  });
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fintech Backend</title>
+  <script type="module">
+    async function init() {
+      try {
+        const res = await fetch('/api/config');
+        const cfg = await res.json();
+        if (cfg.trackerUrl) {
+          const tracker = document.createElement('script');
+          tracker.src = cfg.trackerUrl;
+          tracker.async = true;
+          document.head.appendChild(tracker);
+        }
+        window.APP_CONFIG = cfg;
+      } catch (err) {
+        console.error('Failed to load config', err);
+      }
+    }
+    init();
+  </script>
+</head>
+<body>
+  <h1>Fintech Backend</h1>
+</body>
+</html>
