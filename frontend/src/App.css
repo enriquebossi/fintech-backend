@@ -1,0 +1,12 @@
+body { font-family: Arial, sans-serif; margin: 0; padding: 20px; line-height: 1.6; }
+header { text-align: center; margin-bottom: 40px; }
+.timeline { list-style: none; padding: 0; }
+.timeline li { margin-bottom: 20px; position: relative; padding-left: 20px; }
+.timeline li::before { content: ''; position: absolute; left: 0; top: 5px; width: 10px; height: 10px; background: #333; border-radius: 50%; }
+.personas { display: flex; gap: 20px; flex-wrap: wrap; }
+.persona { border: 1px solid #ccc; border-radius: 4px; padding: 10px; width: 200px; text-align: center; }
+.persona img { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; }
+.diagram { text-align: center; margin: 40px 0; }
+.raci { border-collapse: collapse; width: 100%; }
+.raci th, .raci td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+.raci th { background-color: #f0f0f0; }
