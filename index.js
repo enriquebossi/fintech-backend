@@ -20,6 +20,14 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
 
+// Endpoint to expose select environment variables to the frontend
+app.get('/api/config', (req, res) => {
+    res.json({
+        trackerUrl: process.env.TRACKER_URL || '',
+        slackWebhookUrl: process.env.SLACK_WEBHOOK_URL || ''
+    });
+});
+
 app.post('/api/query-supabase', async (req, res) => {
     const { prompt, tableName } = req.body;
     if (!prompt || !tableName) {
