@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+    h1 { text-align: center; }
+    .section { margin-bottom: 40px; }
+    .personas { display: flex; flex-wrap: wrap; gap: 20px; }
+    .card { border: 1px solid #ccc; padding: 15px; border-radius: 8px; width: 200px; }
+    .timeline { list-style: none; padding-left: 0; }
+    .timeline li { margin-bottom: 10px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f4f4f4; }
+    img.diagram { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+  </style>
+</head>
+<body>
+  <h1>Fintech Project Dashboard</h1>
+
+  <div class="section" id="timeline">
+    <h2>Timeline</h2>
+    <ul class="timeline">
+      <li><strong>Phase 1:</strong> Requirements &amp; Planning</li>
+      <li><strong>Phase 2:</strong> Prototype Development</li>
+      <li><strong>Phase 3:</strong> Testing &amp; Feedback</li>
+      <li><strong>Phase 4:</strong> Deployment</li>
+    </ul>
+  </div>
+
+  <div class="section" id="personas">
+    <h2>Personas</h2>
+    <div class="personas">
+      <div class="card">
+        <h3>Alice – Product Owner</h3>
+        <p>Defines the product vision and priorities.</p>
+      </div>
+      <div class="card">
+        <h3>Bob – Developer</h3>
+        <p>Implements features and fixes bugs.</p>
+      </div>
+      <div class="card">
+        <h3>Carol – QA Specialist</h3>
+        <p>Ensures quality through testing.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="architecture">
+    <h2>Architecture Diagram</h2>
+    <p>The architecture is illustrated below.</p>
+    <img class="diagram" src="architecture.png" alt="Architecture Diagram placeholder" />
+  </div>
+
+  <div class="section" id="raci">
+    <h2>RACI Matrix</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Responsible</th>
+          <th>Accountable</th>
+          <th>Consulted</th>
+          <th>Informed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Requirement Gathering</td>
+          <td>Alice</td>
+          <td>Product Committee</td>
+          <td>Stakeholders</td>
+          <td>Team</td>
+        </tr>
+        <tr>
+          <td>Development</td>
+          <td>Bob</td>
+          <td>Alice</td>
+          <td>Carol</td>
+          <td>Team</td>
+        </tr>
+        <tr>
+          <td>Quality Assurance</td>
+          <td>Carol</td>
+          <td>Alice</td>
+          <td>Bob</td>
+          <td>Team</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
