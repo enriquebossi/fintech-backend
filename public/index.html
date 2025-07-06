@@ -1,11 +1,22 @@
-// ...después de const answer = …
-if (process.env.SLACK_WEBHOOK_URL) {
-  await fetch(process.env.SLACK_WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      channel: '#lean2-dev',               // fuerza canal destino
-      text: `🤖 Cosmo responde: ${answer}`
-    })
-  });
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fintech Backend API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        code { background: #f4f4f4; padding: 2px 4px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Fintech Backend API</h1>
+    <p>This service exposes several endpoints for interacting with financial data and the Cosmo assistant.</p>
+    <ul>
+        <li><code>POST /api/query-supabase</code> – generate SQL with AI and query your Supabase database.</li>
+        <li><code>POST /api/chat</code> – ask questions to the Cosmo Triage assistant.</li>
+        <li><code>GET/POST /api/xibalba-mini</code> – store and retrieve JSON messages.</li>
+    </ul>
+    <p>See the project documentation for setup instructions and more details.</p>
+</body>
+</html>
