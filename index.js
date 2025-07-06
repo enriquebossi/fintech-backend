@@ -7,6 +7,8 @@ const cors = require('cors');
 const app = express();
 app.use(express.json());
 app.use(cors());
+// Serve static files from the public directory
+app.use(express.static('public'));
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;

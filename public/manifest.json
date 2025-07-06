@@ -1,0 +1,9 @@
+{
+  "name": "Cosmo Mobile",
+  "short_name": "Cosmo",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f7f7",
+  "theme_color": "#111111",
+  "icons": []
+}
