@@ -1,11 +1,13 @@
-// ...después de const answer = …
-if (process.env.SLACK_WEBHOOK_URL) {
-  await fetch(process.env.SLACK_WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      channel: '#lean2-dev',               // fuerza canal destino
-      text: `🤖 Cosmo responde: ${answer}`
-    })
-  });
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fintech Backend API</title>
+</head>
+<body>
+  <h1>Fintech Backend API</h1>
+  <p>Welcome! This backend exposes endpoints for Supabase queries and the Cosmo chatbot.</p>
+  <p>Send POST requests to <code>/api/query-supabase</code> to generate SQL from natural language.
+  Use <code>/api/chat</code> for Cosmo AI assistance.</p>
+</body>
+</html>
