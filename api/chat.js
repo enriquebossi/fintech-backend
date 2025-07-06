@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { sendSlackMessage } from "../slack.js";
 
 // Mini Xibalbá storage endpoint
 import { put, list, get } from '@vercel/blob';
@@ -56,16 +57,11 @@ export default async function handler(req, res) {
     const answer = msgList.data[0].content[0].text.value;
 
     // 3. Relay to Slack
-    if (SLACK_WEBHOOK) {
-      await fetch(SLACK_WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          channel: process.env.SLACK_CHANNEL || '#cosmic-nexus-it',
-          text: `🤖 Cosmo responde: ${answer}`
-        })
-      });
-    }
+    await sendSlackMessage(
+      SLACK_WEBHOOK,
+      `🤖 Cosmo responde: ${answer}`,
+      process.env.SLACK_CHANNEL
+    );
 
     // 4. Return to user
     res.status(200).json({ answer });
