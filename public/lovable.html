@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Lovable Project Tracker</title>
+</head>
+<body>
+    <h1>Lovable - Cosmic Nexus Project Tracker</h1>
+    <pre id="tracker">Loading...</pre>
+    <script>
+        async function loadTracker() {
+            try {
+                const res = await fetch('/api/project-tracker');
+                const data = await res.json();
+                document.getElementById('tracker').textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('tracker').textContent = 'Failed to load tracker data';
+            }
+        }
+        loadTracker();
+    </script>
+</body>
+</html>
