@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Project Tracker</title>
+</head>
+<body>
+<h1>Cosmic Nexus Tasks</h1>
+<ul id="task-list"></ul>
+<script>
+fetch('/api/tracker')
+  .then(r => r.json())
+  .then(data => {
+    const list = document.getElementById('task-list');
+    data.tasks.forEach(t => {
+      const li = document.createElement('li');
+      li.textContent = `${t.title} - ${t.status} (${t.progress}%)`;
+      list.appendChild(li);
+    });
+  })
+  .catch(err => {
+    document.getElementById('task-list').textContent = 'Failed to load tasks';
+  });
+</script>
+</body>
+</html>

@@ -3,10 +3,13 @@ const express = require('express');
 const { createClient } = require('@supabase/supabase-js');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(express.static('public'));
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
@@ -44,6 +47,17 @@ app.post('/api/query-supabase', async (req, res) => {
     } catch (error) {
         console.error('Server Error:', error);
         res.status(500).json({ error: 'An internal server error occurred.' });
+    }
+});
+
+app.get('/api/tracker', (req, res) => {
+    try {
+        const data = fs.readFileSync(path.join(__dirname, 'project_tasks.json'), 'utf8');
+        const tasks = JSON.parse(data);
+        res.json({ tasks });
+    } catch (err) {
+        console.error('Tracker Error:', err);
+        res.status(500).json({ error: 'Failed to load tasks' });
     }
 });
 
