@@ -11,16 +11,26 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.0.0",
     "@openzeppelin/contracts": "^5.3.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "ethers": "^6.15.0",
     "hardhat": "^2.25.0",
     "jest": "^30.0.4",
+    "jest-axe": "^10.0.0",
+    "jest-environment-jsdom": "^30.0.4",
     "supertest": "^7.1.1"
   },
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:contracts": "hardhat test"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupTests.js"
+    ],
+    "testMatch": [
+      "<rootDir>/src/tests/**/*.test.js"
+    ]
   }
 }
