@@ -1,6 +1,6 @@
 # Fintech Backend
 
-This project provides a Node.js/Express backend with Solidity smart contracts. A lightweight React front‑end is included in `public/index.html` to demonstrate the Agile planning blueprint.
+This project provides a Node.js/Express backend with Solidity smart contracts. A full React front‑end lives in the `frontend/` directory and demonstrates the Agile planning blueprint.
 
 ## Prerequisites
 
@@ -43,7 +43,20 @@ Start the Express server on port `3001`:
 node index.js
 ```
 
-Open `public/index.html` in your browser to view the React Agile blueprint.
+### Frontend
+
+The React application lives in `frontend/`.
+
+```bash
+cd frontend
+npm install            # first time only
+npm run dev            # start Vite development server
+
+# build production assets
+npm run build
+```
+
+After building, the static site will be available in `frontend/dist`.
 
 ## Tests
 
