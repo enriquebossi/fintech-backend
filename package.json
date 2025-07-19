@@ -18,7 +18,9 @@
   },
   "scripts": {
     "test": "jest",
-    "test:contracts": "hardhat test"
+    "test:contracts": "hardhat test",
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build"
   },
   "jest": {
     "testEnvironment": "node"
