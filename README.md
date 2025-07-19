@@ -30,10 +30,13 @@ The server requires several variables. Create a `.env` file or configure them in
    ```bash
    npm install
    ```
-2. Compile the Solidity contracts (required before running tests):
+2. Compile the Solidity contracts:
    ```bash
    npx hardhat compile
    ```
+   The test script automatically runs this command before executing the Jest
+   suite, so manual compilation is only necessary when deploying or interacting
+   with contracts directly.
 
 ## Running the Server
 
@@ -47,7 +50,8 @@ Open `public/index.html` in your browser to view the React Agile blueprint.
 
 ## Tests
 
-Run API and contract tests:
+Run API and contract tests. The `npm test` command will compile your
+Solidity contracts automatically before running Jest:
 
 ```bash
 npm test
