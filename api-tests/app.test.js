@@ -1,3 +1,4 @@
+/** @jest-environment node */
 process.env.SUPABASE_URL = 'http://localhost';
 process.env.SUPABASE_ANON_KEY = 'anon';
 process.env.GEMINI_API_KEY = 'key';
