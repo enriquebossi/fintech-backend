@@ -10,6 +10,7 @@ const nftAbi = require('./artifacts/contracts/DynamicMetadataNFT.sol/DynamicMeta
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(express.static('public'));
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;

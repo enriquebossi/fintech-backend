@@ -45,6 +45,19 @@ node index.js
 
 Open `public/index.html` in your browser to view the React Agile blueprint.
 
+### Webporting Add-ons
+
+The front-end exposes a simple plug-in system powered by `public/blackboard.js`.
+Any script can register a React component globally by calling:
+
+```js
+window.Blackboard.registerAddon(MyComponent);
+```
+
+Both `CosmicNexusApp` (in `index.html`) and the `Scriptment` view read
+from this context and render all registered add-ons below the main
+content. An example add-on is provided in `public/addons/HelloAddon.js`.
+
 ## Tests
 
 Run API and contract tests:
