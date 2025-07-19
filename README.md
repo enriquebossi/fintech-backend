@@ -4,7 +4,7 @@ This project provides a Node.js/Express backend with Solidity smart contracts. A
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 20+ (see `.github/workflows/npm-publish-github-packages.yml` for the CI configuration)
 - npm
 - An Ethereum RPC endpoint for contract interaction
 
