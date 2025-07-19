@@ -1,0 +1,47 @@
+body {
+  font-family: 'Inter', sans-serif;
+}
+.tab-active {
+  border-color: #0d9488;
+  color: #0d9488;
+  font-weight: 600;
+}
+.tab-inactive {
+  border-color: transparent;
+  color: #6b7280;
+}
+.content-section {
+  display: none;
+}
+.content-section.active {
+  display: block;
+}
+.card-flip {
+  transform-style: preserve-3d;
+  transition: transform 0.7s;
+}
+.card-flipper.flipped .card-flip {
+  transform: rotateY(180deg);
+}
+.card-front,
+.card-back {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.card-back {
+  transform: rotateY(180deg);
+}
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 300px;
+  max-height: 400px;
+}
+@media (min-width: 768px) {
+  .chart-container {
+    height: 350px;
+  }
+}
