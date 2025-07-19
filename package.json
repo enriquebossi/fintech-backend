@@ -11,14 +11,18 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.0.0",
     "@openzeppelin/contracts": "^5.3.0",
+    "cypress": "^13.7.3",
     "ethers": "^6.15.0",
     "hardhat": "^2.25.0",
+    "http-server": "^14.1.1",
     "jest": "^30.0.4",
     "supertest": "^7.1.1"
   },
   "scripts": {
     "test": "jest",
-    "test:contracts": "hardhat test"
+    "test:contracts": "hardhat test",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "jest": {
     "testEnvironment": "node"
