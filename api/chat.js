@@ -1,13 +1,13 @@
-import OpenAI from "openai";
+const OpenAI = require("openai");
 
 // Mini Xibalbá storage endpoint
-import { put, list, get } from '@vercel/blob';
+const { put, list, get } = require('@vercel/blob');
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const ASSISTANT_ID = process.env.ASSISTANT_ID;  // e.g. asst_xxx
 const SLACK_WEBHOOK = process.env.SLACK_WEBHOOK_URL;
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   try {
     // 1. Handle Mini Xibalbá storage API
     if (req.url.endsWith('/api/xibalba-mini')) {
@@ -73,4 +73,4 @@ export default async function handler(req, res) {
     console.error('Cosmo Triage Error:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
