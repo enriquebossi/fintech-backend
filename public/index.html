@@ -28,6 +28,7 @@
 </head>
 <body class="bg-stone-50 text-stone-800">
   <div id="root"></div>
+  <script type="text/babel" src="Scriptment.jsx"></script>
   <script type="text/babel">
 const { useState, useEffect } = React;
 function App() {
@@ -83,14 +84,15 @@ function App() {
 
       <nav className="mb-8 border-b border-stone-200">
         <ul className="flex flex-wrap -mb-px text-sm font-medium text-center text-stone-500">
-          {['team','sprint','framework','practices'].map(tab => (
+          {['team','scriptment','sprint','framework','practices'].map(tab => (
             <li key={tab} className="mr-2">
               <button className={`nav-tab inline-block p-4 border-b-2 rounded-t-lg ${activeTab===tab?'tab-active':'tab-inactive'}`} onClick={() => setActiveTab(tab)}>
                 {tab==='team' && <span className="hidden sm:inline">👥</span>}
+                {tab==='scriptment' && <span className="hidden sm:inline">📜</span>}
                 {tab==='sprint' && <span className="hidden sm:inline">🚀</span>}
                 {tab==='framework' && <span className="hidden sm:inline">🏗️</span>}
                 {tab==='practices' && <span className="hidden sm:inline">💡</span>}
-                {tab==='team' ? ' Team Overview' : tab==='sprint' ? ' Sprint 1 Plan' : tab==='framework' ? ' Agile Framework' : ' Best Practices'}
+                {tab==='team' ? ' Team Overview' : tab==='scriptment' ? ' Scriptment' : tab==='sprint' ? ' Sprint 1 Plan' : tab==='framework' ? ' Agile Framework' : ' Best Practices'}
               </button>
             </li>
           ))}
@@ -148,6 +150,10 @@ function App() {
               </div>
             ))}
           </div>
+        </section>
+
+        <section id="scriptment" className={activeTab==='scriptment'?'content-section active':'content-section'}>
+          <Scriptment />
         </section>
 
         <section id="sprint" className={activeTab==='sprint'?'content-section active':'content-section'}>

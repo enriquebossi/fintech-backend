@@ -1,0 +1,15 @@
+{
+  "title": "Demo Scriptment",
+  "scenes": [
+    {
+      "id": 1,
+      "title": "Opening",
+      "lines": [
+        {"character": "Narrator", "text": "Welcome to the Scriptment demo."},
+        {"character": "User", "text": "These lines come from JSON."},
+        {"character": "Codex", "text": "Plug-ins render below."}
+      ],
+      "addons": ["sampleAddon"]
+    }
+  ]
+}
