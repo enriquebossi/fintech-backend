@@ -1,10 +1,12 @@
 # Fintech Backend
 
+[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
+
 This project provides a Node.js/Express backend with Solidity smart contracts. A lightweight React front‑end is included in `public/index.html` to demonstrate the Agile planning blueprint.
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 20
 - npm
 - An Ethereum RPC endpoint for contract interaction
 
@@ -30,7 +32,8 @@ The server requires several variables. Create a `.env` file or configure them in
    ```bash
    npm install
    ```
-2. Compile the Solidity contracts (required before running tests):
+2. Copy `.env.example` to `.env` and provide your configuration.
+3. Compile the Solidity contracts (required before running tests):
    ```bash
    npx hardhat compile
    ```
@@ -40,8 +43,10 @@ The server requires several variables. Create a `.env` file or configure them in
 Start the Express server on port `3001`:
 
 ```bash
-node index.js
+npm start
 ```
+
+The `prestart` script automatically compiles the contracts before launching.
 
 Open `public/index.html` in your browser to view the React Agile blueprint.
 
@@ -53,3 +58,6 @@ Run API and contract tests:
 npm test
 npm run test:contracts
 ```
+
+Tests expect compiled contracts in the `artifacts/` directory. If they are
+missing, run `npx hardhat compile` first or start the server once.

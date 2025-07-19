@@ -17,6 +17,9 @@
     "supertest": "^7.1.1"
   },
   "scripts": {
+    "prestart": "npx hardhat compile",
+    "start": "node index.js",
+    "pretest": "npx hardhat compile",
     "test": "jest",
     "test:contracts": "hardhat test"
   },
