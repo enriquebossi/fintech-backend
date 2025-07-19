@@ -1,7 +1,7 @@
-import { put, list, get } from '@vercel/blob';
+const { put, list, get } = require('@vercel/blob');
 
 // Endpoint: guarda/recupera mensajes JSON
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   const bucket = 'xibalba-mini';
   
   if (req.method === 'POST') {
@@ -18,4 +18,4 @@ export default async function handler(req, res) {
   }
 
   res.status(405).end();
-}
+};
