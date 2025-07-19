@@ -1,0 +1,146 @@
+{
+  "team": [
+    {
+      "name": "Daria",
+      "emoji": "\ud83d\udc51",
+      "role": "Product Owner",
+      "mission": "Core Mission: Maximize Product Value",
+      "responsibilities": [
+        "Defines Product Goal and Sprint Goals",
+        "Creates and prioritizes the Product Backlog",
+        "Represents stakeholder needs",
+        "Accepts or rejects work results",
+        "Has final say on product decisions"
+      ]
+    },
+    {
+      "name": "Codex",
+      "emoji": "\ud83d\udd27",
+      "role": "Developer",
+      "mission": "Core Mission: Deliver a \"Done\" Increment",
+      "responsibilities": [
+        "Turns backlog items into a 'Done' increment",
+        "Creates and manages the Sprint Backlog",
+        "Adheres to the Definition of Done",
+        "Adapts the plan daily",
+        "Self-organizes the implementation"
+      ]
+    },
+    {
+      "name": "Core-Cosmo",
+      "emoji": "\ud83d\udee1\ufe0f",
+      "role": "Scrum Master",
+      "mission": "Core Mission: Optimize Team Process",
+      "responsibilities": [
+        "Coaches the team in Scrum",
+        "Removes impediments",
+        "Facilitates Scrum events",
+        "Protects the team from distractions",
+        "Fosters continuous improvement"
+      ]
+    }
+  ],
+  "sprint": {
+    "title": "Sprint 1 Plan: User Authentication",
+    "goal": "Establish user registration and login",
+    "stories": [
+      {
+        "name": "Story 1: Create Account (5)",
+        "description": "As a new visitor, I want to create an account.",
+        "acceptance": [
+          "Successful registration redirects to login",
+          "Existing email shows an error"
+        ],
+        "tasks": [
+          "Create `users` table",
+          "Build registration UI",
+          "Implement `/register` API",
+          "Implement password hashing",
+          "Write unit tests"
+        ]
+      },
+      {
+        "name": "Story 2: User Login (3)",
+        "description": "As a registered user, I want to log in.",
+        "acceptance": [
+          "Login redirects to dashboard",
+          "Incorrect credentials show an error"
+        ],
+        "tasks": [
+          "Build login UI",
+          "Implement `/login` API",
+          "Implement password comparison",
+          "Create session token",
+          "Write unit tests"
+        ]
+      },
+      {
+        "name": "Story 3: User Logout (2)",
+        "description": "As a logged-in user, I want a logout button.",
+        "acceptance": [
+          "Logout ends session and redirects"
+        ],
+        "tasks": [
+          "Add logout button",
+          "Implement `/logout` API",
+          "Clear client session"
+        ]
+      }
+    ]
+  },
+  "framework": {
+    "ac": [
+      "Scope: A single User Story",
+      "Purpose: Confirms story requirements",
+      "Author: Product Owner with Developer",
+      "Example: 'Given incorrect password, show error.'"
+    ],
+    "dod": [
+      "Scope: All items",
+      "Purpose: Consistent quality",
+      "Author: Entire team",
+      "Example: 'Code peer-reviewed, tests >80%'"
+    ],
+    "comm": {
+      "Daily Scrum": {
+        "purpose": "A 15-minute daily planning event for the Developers to inspect progress toward the Sprint Goal and adapt the plan.",
+        "participants": "Required: Codex. Facilitator: Core-Cosmo. Observer: Daria.",
+        "frequency": "Daily at a consistent time."
+      },
+      "Sprint Planning": {
+        "purpose": "Define the Sprint Goal and select the work for the upcoming sprint.",
+        "participants": "Required: Daria, Codex, Core-Cosmo.",
+        "frequency": "At the beginning of every sprint."
+      },
+      "Backlog Refinement": {
+        "purpose": "Clarify and estimate upcoming Product Backlog items.",
+        "participants": "Required: Daria, Codex. Optional: Core-Cosmo.",
+        "frequency": "Ongoing, typically 1-2 hours per sprint."
+      },
+      "Sprint Review": {
+        "purpose": "Show the 'Done' increment to stakeholders to gather feedback.",
+        "participants": "Required: Daria, Codex, Core-Cosmo, stakeholders.",
+        "frequency": "At the end of every sprint."
+      },
+      "Retrospective": {
+        "purpose": "Reflect on the past sprint and plan improvements.",
+        "participants": "Required: Daria, Codex, Core-Cosmo (team only).",
+        "frequency": "At the end of every sprint, after the review."
+      }
+    }
+  },
+  "practices": [
+    {
+      "title": "The First Retrospective",
+      "content": "The first retrospective is crucial. Keep it simple and focus on actionable improvements."
+    },
+    {
+      "title": "Continuous Backlog Refinement",
+      "content": "Dedicate time each sprint to discuss upcoming work."
+    },
+    {
+      "title": "Avoiding Anti-Patterns",
+      "content": "Daily Scrum is not a status report. Never ignore the Definition of Done."
+    }
+  ]
+}
