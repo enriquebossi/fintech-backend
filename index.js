@@ -17,6 +17,8 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !GEMINI_API_KEY) {
     console.error("CRITICAL ERROR: Missing environment variables.");
+    // Terminate early so the server doesn't start with an invalid configuration
+    process.exit(1);
 }
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
