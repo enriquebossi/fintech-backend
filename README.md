@@ -30,7 +30,11 @@ The server requires several variables. Create a `.env` file or configure them in
    ```bash
    npm install
    ```
-2. Compile the Solidity contracts (required before running tests):
+2. Copy the sample environment file:
+   ```bash
+   cp .env.example .env
+   ```
+3. Compile the Solidity contracts (required before running tests):
    ```bash
    npx hardhat compile
    ```
@@ -40,7 +44,7 @@ The server requires several variables. Create a `.env` file or configure them in
 Start the Express server on port `3001`:
 
 ```bash
-node index.js
+npm start
 ```
 
 Open `public/index.html` in your browser to view the React Agile blueprint.
@@ -53,3 +57,9 @@ Run API and contract tests:
 npm test
 npm run test:contracts
 ```
+
+## Continuous Integration
+
+The repository includes a GitHub Actions workflow located at
+`.github/workflows/npm-publish-github-packages.yml`. It runs on Node.js 18 and
+publishes the package to GitHub Packages on each push to the `main` branch.
