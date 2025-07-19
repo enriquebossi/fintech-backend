@@ -1,6 +1,7 @@
 process.env.SUPABASE_URL = 'http://localhost';
 process.env.SUPABASE_ANON_KEY = 'anon';
 process.env.GEMINI_API_KEY = 'key';
+process.env.PRIVATE_KEY = '0x0123456789012345678901234567890123456789012345678901234567890123';
 const request = require('supertest');
 const { app, supabase, credit, nft } = require('../index');
 
