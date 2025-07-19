@@ -10,13 +10,13 @@ This project provides a Node.js/Express backend with Solidity smart contracts. A
 
 ## Environment Variables
 
-The server requires several variables. Create a `.env` file or configure them in your hosting platform.
+The server requires several variables. Create a `.env` file or configure them in your hosting platform. `PRIVATE_KEY` is mandatory and the server will exit if it is not provided.
 
 - `SUPABASE_URL` – Supabase instance URL
 - `SUPABASE_ANON_KEY` – Supabase anonymous key
 - `GEMINI_API_KEY` – Google Gemini API key
 - `RPC_URL` – Ethereum RPC endpoint (default `http://127.0.0.1:8545`)
-- `PRIVATE_KEY` – Private key used to sign transactions
+- `PRIVATE_KEY` – **required** private key used to sign transactions
 - `CREDIT_TOKEN_ADDRESS` – Deployed `CreditToken` contract address
 - `NFT_ADDRESS` – Deployed `DynamicMetadataNFT` contract address
 - `OPENAI_API_KEY` – OpenAI key for `api/chat.js`
