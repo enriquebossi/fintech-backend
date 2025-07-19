@@ -11,14 +11,18 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.0.0",
     "@openzeppelin/contracts": "^5.3.0",
+    "eslint": "^9.31.0",
     "ethers": "^6.15.0",
     "hardhat": "^2.25.0",
     "jest": "^30.0.4",
+    "prettier": "^3.6.2",
     "supertest": "^7.1.1"
   },
   "scripts": {
     "test": "jest",
-    "test:contracts": "hardhat test"
+    "test:contracts": "hardhat test",
+    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint .",
+    "format": "prettier --write ."
   },
   "jest": {
     "testEnvironment": "node"
