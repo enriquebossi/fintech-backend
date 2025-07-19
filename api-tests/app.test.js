@@ -7,7 +7,7 @@ const { app, supabase, credit, nft } = require('../index');
 describe('API routes', () => {
   beforeAll(() => {
     jest.spyOn(credit, 'mint').mockImplementation(() => Promise.resolve({ wait: () => Promise.resolve(), hash: '0x123' }));
-    nft.callStatic = { mintWithURI: jest.fn().mockResolvedValue(1) };
+    nft.mintWithURI.staticCall = jest.fn().mockResolvedValue(1);
     jest.spyOn(nft, 'mintWithURI').mockImplementation(() => Promise.resolve({ wait: () => Promise.resolve(), hash: '0xabc' }));
     jest.spyOn(supabase, 'from').mockImplementation(() => ({
       insert: () => ({ select: () => ({ single: () => Promise.resolve({ data: { id: 1 }, error: null }) }) }),
