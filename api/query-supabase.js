@@ -48,10 +48,10 @@ app.post('/api/query-supabase', async (req, res) => {
             You are an expert PostgreSQL assistant. Based on the following table schema for a table named "${tableName}", convert the user's request into a valid SQL query.
             The table schema has the following columns with their types: "EntryID" (text), "SubmissionTimestamp" (timestamp), "SubmitterEmail" (text), "SubmitterHandle" (text), "EntryTimestamp" (date), "TransactionArchetype" (text), "TransactionType" (text), "Direction" (text, can be 'IN', 'OUT', 'TAKEN', 'GRANTED'), "Currency" (text, e.g., 'USD', 'GTQ'), "Value" (numeric), "Counterparty" (text), "Purpose" (text), "Method/Account" (text), "DueDate" (date), "LunarCycle" (text), "HumanNotes" (text), "AIPromptContext" (text).
             Only return the SQL query and nothing else. Do not wrap it in markdown or any other characters.
-            
+
             User's request: "${prompt}"
         `;
-        
+
         const result = await model.generateContent(schemaPrompt);
         const sqlQuery = result.response.text().trim().replace(/;/g, ''); // Remove trailing semicolons
         console.log("Generated SQL:", sqlQuery);
