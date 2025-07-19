@@ -14,16 +14,18 @@ app.use(cors());
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !GEMINI_API_KEY) {
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !GEMINI_API_KEY || !PRIVATE_KEY) {
     console.error("CRITICAL ERROR: Missing environment variables.");
+    process.exit(1);
 }
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL || "http://127.0.0.1:8545");
-const signer = new ethers.Wallet(process.env.PRIVATE_KEY || ethers.Wallet.createRandom().privateKey, provider);
+const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 const credit = new ethers.Contract(process.env.CREDIT_TOKEN_ADDRESS || ethers.ZeroAddress, creditAbi, signer);
 const nft = new ethers.Contract(process.env.NFT_ADDRESS || ethers.ZeroAddress, nftAbi, signer);
 
